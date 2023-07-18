@@ -4,8 +4,10 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 from ml.data import process_data
-
+import pickle
 from sklearn.tree import DecisionTreeClassifier
+
+from starter.starter.ml.model import train_model, inference, compute_model_metrics
 
 # Add code to load in the data.
 data = pd.read_csv("../data/census.csv")
@@ -34,9 +36,16 @@ X_test, y_test, encoder, lb = process_data(
     encoder=encoder, lb=lb
 )
 
-# Train and save a model.
-d = DecisionTreeClassifier()
-d.fit(X_train, y_train)
-y_pred = d.predict(X_test)
+# Train a model.
+model = train_model(X_train, y_train)
 
-print("Accuracy: ", accuracy_score(y_test, y_pred))
+# Save the trained model
+filename = "../model/model.sav"
+pickle.dump(model, open(filename, 'wb'))
+
+# Run inference
+y_pred = inference(model, X_test)
+
+# Compute model metrics
+precision, recall, fbeta = compute_model_metrics(y_test, y_pred)
+
