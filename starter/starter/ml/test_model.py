@@ -1,13 +1,16 @@
+import os
+
 import pytest
 import pandas as pd
 
 from .data import process_data
 from .model import train_model
+from .. import DATA_DIR
 
 
 @pytest.fixture
 def df():
-    return pd.read_csv("../../data/census.csv")
+    return pd.read_csv(os.path.join(os.path.abspath(DATA_DIR), "census.csv"))
 
 
 @pytest.fixture
