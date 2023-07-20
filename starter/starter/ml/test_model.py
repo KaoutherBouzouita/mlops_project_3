@@ -10,7 +10,7 @@ from .model import train_model
 
 @pytest.fixture
 def df():
-    return pd.read_csv(os.path.join(os.path.abspath(DATA_DIR), "census.csv"))
+    return pd.read_csv(os.path.join(DATA_DIR, "census.csv"))
 
 
 @pytest.fixture
