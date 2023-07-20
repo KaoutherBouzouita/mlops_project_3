@@ -1,2 +1,1 @@
 
-DATA_DIR = "../data/"
