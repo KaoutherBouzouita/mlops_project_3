@@ -3,9 +3,9 @@ import os
 import pytest
 import pandas as pd
 
+from . import DATA_DIR
 from .data import process_data
 from .model import train_model
-from .. import DATA_DIR
 
 
 @pytest.fixture
