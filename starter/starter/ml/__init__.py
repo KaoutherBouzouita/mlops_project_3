@@ -1,1 +1,1 @@
-DATA_DIR = "../starter/data/"
+DATA_DIR = "../../data/"
