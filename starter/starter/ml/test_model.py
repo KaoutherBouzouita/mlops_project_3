@@ -101,20 +101,3 @@ def test_train_model(df, X_train, y_train):
     assert len(model.classes_) == 2
 
 
-def test_slice_averages(cat_features, X_test, y_test, df, model):
-    """ Function for calculating descriptive stats on slices of the Adult dataset."""
-    for cat in cat_features:  # cat in ['workclass', 'education', 'marital-status', 'occupation',...]
-        for value in df[cat].unique():
-            # Features values for the selected value
-            y_test_cat = y_test[df[df[cat] == value].index]
-            X_test_cat = X_test[df[df[cat] == value].index]
-            # Run inference
-            y_pred_cat = inference(model, X_test_cat)
-            # Model metrics for each category
-            precision, recall, fbeta = compute_model_metrics(y_test_cat, y_pred_cat)
-
-            print(f"Feature: {cat} - Value {value}")
-            print(f"Precision: {precision:.4f}")
-            print(f"Recall: {recall:.4f}")
-            print(f"Fbeta: {fbeta:.4f}")
-        print()

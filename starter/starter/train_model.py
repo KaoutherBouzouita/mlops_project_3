@@ -12,7 +12,7 @@ from sklearn.tree import DecisionTreeClassifier
 from ml.model import train_model, inference, compute_model_metrics
 
 
-def slice_averages(cat_features, df_train, df_test, model):
+def slice_averages(cat_features, df_train, df_test):
     """ Function for calculating descriptive stats on slices of the Adult dataset."""
 
     for cat in cat_features:  # cat in ['workclass', 'education', 'marital-status', 'occupation',...]
@@ -76,6 +76,7 @@ def save_model(model):
 def go():
     data = load_data()
     train, test = split_data(data, True)
+
     cat_features = [
         "workclass",
         "education",
@@ -116,7 +117,7 @@ def go():
     print("Overall Recall: ", recall)
     print("Overall Fbeta: ", fbeta)
 
-    slice_averages(cat_features, train, test, model)
+    slice_averages(cat_features, train, test)
 
 
 go()
