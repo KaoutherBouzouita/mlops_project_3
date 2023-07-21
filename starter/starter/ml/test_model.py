@@ -14,11 +14,13 @@ def df():
     return pd.read_csv(os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', "census.csv")))
 
 
+@pytest.fixture
 def df_train(df):
     train, test = train_test_split(df, test_size=0.20, random_state=23)
     return train
 
 
+@pytest.fixture
 def df_test(df):
     train, test = train_test_split(df, test_size=0.20, random_state=23)
     return test
@@ -39,38 +41,38 @@ def cat_features():
 
 
 @pytest.fixture
-def X_train(df, cat_features):
+def X_train(df_train, cat_features):
     X, y, encoder, lb = process_data(df_train, categorical_features=cat_features, label="salary", training=True)
     return X
 
 
 @pytest.fixture
-def y_train(df, cat_features):
+def y_train(df_train, cat_features):
     X, y, encoder, lb = process_data(df_train, categorical_features=cat_features, label="salary", training=True)
     return y
 
 
 @pytest.fixture
-def encoder(df, cat_features):
-    X, y, encoder, lb = process_data(df, categorical_features=cat_features, label="salary", training=True)
+def encoder(df_train, cat_features):
+    X, y, encoder, lb = process_data(df_train, categorical_features=cat_features, label="salary", training=True)
     return encoder
 
 
 @pytest.fixture
-def lb(df, cat_features):
-    X, y, encoder, lb = process_data(df, categorical_features=cat_features, label="salary", training=True)
+def lb(df_train, cat_features):
+    X, y, encoder, lb = process_data(df_train, categorical_features=cat_features, label="salary", training=True)
     return lb
 
 
 @pytest.fixture
-def X_test(df, cat_features, encoder, lb):
+def X_test(df_test, cat_features, encoder, lb):
     X_test, y_test, encoder, lb = process_data(df_test, categorical_features=cat_features, label="salary", training=False,
                                                encoder=encoder, lb=lb)
     return X_test
 
 
 @pytest.fixture
-def y_test(df, cat_features, encoder, lb):
+def y_test(df_test, cat_features, encoder, lb):
     X_test, y_test, encoder, lb = process_data(df_test, categorical_features=cat_features, label="salary", training=False,
                                                encoder=encoder, lb=lb)
     return y_test
@@ -88,11 +90,11 @@ def y_pred(model, X_test):
 
 
 def test_X(X_train):
-    assert X_train.shape == (32561, 108)
+    assert X_train.shape == (26048, 108)
 
 
 def test_y(y_train):
-    assert y_train.shape == (32561,)
+    assert y_train.shape == (26048,)
 
 
 def test_train_model(df, X_train, y_train):
