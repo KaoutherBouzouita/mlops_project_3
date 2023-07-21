@@ -5,11 +5,11 @@ import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
-from ml.data import process_data
 import pickle
 from sklearn.tree import DecisionTreeClassifier
 
-from ml.model import train_model, inference, compute_model_metrics
+from data import process_data
+from model import train_model, inference, compute_model_metrics, save_model
 
 
 def slice_averages(cat_features, df_train, df_test):
@@ -57,7 +57,7 @@ def slice_averages(cat_features, df_train, df_test):
 
 def load_data():
     """Add code to load in the data."""
-    return pd.read_csv(os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'data', "census.csv")))
+    return pd.read_csv(os.path.realpath(os.path.join(os.path.dirname(__file__), '../..', 'data', "census.csv")))
 
 
 def split_data(data: pd.DataFrame, random_state: bool):
@@ -67,10 +67,6 @@ def split_data(data: pd.DataFrame, random_state: bool):
     return train_test_split(data, test_size=0.20)
 
 
-def save_model(model):
-    """Save trained model"""
-    filename = "../model/model.sav"
-    pickle.dump(model, open(filename, 'wb'))
 
 
 def go():
@@ -87,10 +83,13 @@ def go():
         "sex",
         "native-country",
     ]
-    # Proces the train data with the process_data function.
+    # Process the train data with the process_data function.
     X_train, y_train, encoder, lb = process_data(
         train, categorical_features=cat_features, label="salary", training=True
     )
+
+    with open('encoder.pkl', 'wb') as file:
+        pickle.dump(encoder, file)
 
     # Proces the test data with the process_data function.
     X_test, y_test, encoder, lb = process_data(
@@ -117,7 +116,7 @@ def go():
     print("Overall Recall: ", recall)
     print("Overall Fbeta: ", fbeta)
 
-    slice_averages(cat_features, train, test)
+    # slice_averages(cat_features, train, test)
 
 
 go()

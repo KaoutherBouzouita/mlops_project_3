@@ -1,3 +1,6 @@
+import os
+import pickle
+
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from sklearn.tree import DecisionTreeClassifier
 
@@ -45,6 +48,17 @@ def compute_model_metrics(y, preds):
     precision = precision_score(y, preds, zero_division=1)
     recall = recall_score(y, preds, zero_division=1)
     return precision, recall, fbeta
+
+
+def save_model(model):
+    """Save trained model"""
+    filename = os.path.realpath(os.path.join(os.path.dirname(__file__), "../../model/model.sav"))
+    pickle.dump(model, open(filename, 'wb'))
+
+
+def load_model(model_name):
+    return pickle.load(open(os.path.realpath(os.path.join(os.path.dirname(__file__), '../..',
+                                                          'model', f'{model_name}.sav')), 'rb'))
 
 
 def inference(model, X):

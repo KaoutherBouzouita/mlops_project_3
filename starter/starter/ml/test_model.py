@@ -1,12 +1,12 @@
 import os
-import pickle
 
 import pytest
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from .data import process_data
-from .model import train_model, compute_model_metrics, inference
+from .model import train_model, inference
+from starter.starter.ml.train_model import load_model
 
 
 @pytest.fixture
@@ -80,8 +80,7 @@ def y_test(df_test, cat_features, encoder, lb):
 
 @pytest.fixture
 def model():
-    return pickle.load(open(os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..',
-                                                          'model', 'model.sav')), 'rb'))
+    return load_model(model_name='model.sav')
 
 
 @pytest.fixture
