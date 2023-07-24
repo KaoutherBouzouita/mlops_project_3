@@ -9,6 +9,7 @@ from fastapi import FastAPI, Body
 from pydantic import BaseModel, Field
 
 import model as model
+from starter.starter.ml.model import inference, load_model
 
 
 class Person(BaseModel):
@@ -78,7 +79,7 @@ def run_inference(X_input: Person):
 
     X_data = np.concatenate((X_numerical, X_categorical_encoded), axis=1)
 
-    y = model.inference(model=model.load_model("model"), X=X_data)
+    y = inference(model=load_model("model"), X=X_data)
 
     return {"salary": str(y)}
 
