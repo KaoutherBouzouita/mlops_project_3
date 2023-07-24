@@ -3,9 +3,12 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+from munch import DefaultMunch
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
 from pydantic import BaseModel, Field
+
+import requests
 
 from starter.ml.model import inference, load_model
 
@@ -15,16 +18,16 @@ class Person(BaseModel):
     workclass: str
     fnlgt: int
     education: str
-    education_num: int = Field(alias="education-num")
-    marital_status: str = Field(alias="marital-status")
+    education_num: int
+    marital_status: str
     occupation: str
     relationship: str
     race: str
     sex: str
-    capital_gain: int = Field(alias="capital-gain")
-    capital_loss: int = Field(alias="capital-loss")
-    hours_per_week: int = Field(alias="hours-per-week")
-    native_country: str = Field(alias="native-country")
+    capital_gain: int
+    capital_loss: int
+    hours_per_week: int
+    native_country: str
 
 
 app = FastAPI()
@@ -35,43 +38,37 @@ async def greetings():
     return {"greetings": "Welcome to the 3rd MLOPS project !"}
 
 
-@app.post("/run_inference/{model}")
-async def run_inference(model: Any, X: Person):
-    model = load_model(model_name=f"{model}.sav")
-    return inference(model, X)
-
-
-if __name__ == "__main__":
-    # uvicorn.run(app, host="0.0.0.0", port=8000)
-
+@app.post("/run_inference/")
+def run_inference(X_input: Person):
     # Input data (single sample)
-    X = {
-        "age": 30,
-        "workclass": "State-gov",
-        "fnlgt": 141297,
-        "education": "Bachelors",
-        "education-num": 13,
-        "marital-status": "Married-civ-spouse",
-        "occupation": "Prof-specialty",
-        "relationship": "Husband",
-        "race": "Asian-Pac-Islander",
-        "sex": "Male",
-        "capital-gain": 0,
-        "capital-loss": 0,
-        "hours-per-week": 40,
-        "native-country": "India"
+    X_init = {
+        "age": X_input.age,
+        "workclass": X_input.workclass,
+        "fnlgt": X_input.fnlgt,
+        "education": X_input.education,
+        "education_num": X_input.education_num,
+        "marital_status": X_input.marital_status,
+        "occupation": X_input.occupation,
+        "relationship": X_input.relationship,
+        "race": X_input.race,
+        "sex": X_input.sex,
+        "capital_gain": X_input.capital_gain,
+        "capital_loss": X_input.capital_loss,
+        "hours_per_week": X_input.hours_per_week,
+        "native_country": X_input.native_country
     }
 
-    X = pd.DataFrame([X])
+    X_data = pd.DataFrame.from_dict(DefaultMunch.fromDict(X_init), orient='index')
+    X_data = X_data.transpose()
 
     # Extract numerical features
-    numerical_features = ['age', 'fnlgt', 'education-num', 'capital-gain', 'capital-loss', 'hours-per-week']
-    X_numerical = np.array(X[numerical_features])
+    numerical_features = ['age', 'fnlgt', 'education_num', 'capital_gain', 'capital_loss', 'hours_per_week']
+    X_numerical = np.array(X_data[numerical_features])
 
     # Extract categorical features
-    categorical_features = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race', 'sex',
-                            'native-country']
-    X_categorical = np.array(X[categorical_features])
+    categorical_features = ['workclass', 'education', 'marital_status', 'occupation', 'relationship', 'race', 'sex',
+                            'native_country']
+    X_categorical = np.array(X_data[categorical_features])
 
     with open('encoder.pkl', 'rb') as file:
         encoder = pickle.load(file)
@@ -81,7 +78,35 @@ if __name__ == "__main__":
     # Transform X_categorical using the encoder
     X_categorical_encoded = encoder.transform(X_categorical_df)
 
-    X = np.concatenate((X_numerical, X_categorical_encoded), axis=1)
+    X_data = np.concatenate((X_numerical, X_categorical_encoded), axis=1)
 
-    y = inference(model=load_model("model"), X=X)
-    print("Salary belongs to category: ", y)
+    y = inference(model=load_model("model"), X=X_data)
+
+    return {"salary": str(y)}
+
+
+if __name__ == "__main__":
+    X = {
+        "age": 30,
+        "workclass": "Private",
+        "fnlgt": 120000,
+        "education": "Bachelors",
+        "education_num": 13,
+        "marital_status": "Married-civ-spouse",
+        "occupation": "Prof-specialty",
+        "relationship": "Husband",
+        "race": "White",
+        "sex": "Male",
+        "capital_gain": 5000,
+        "capital_loss": 0,
+        "hours_per_week": 40,
+        "native_country": "United States"
+    }
+
+    # response = requests.post("http://localhost:8000/run_inference/", json.dumps(X))
+
+    # print(response.json())
+
+    # print(response.status_code)
+
+    run_inference(X_input=DefaultMunch.fromDict(X))

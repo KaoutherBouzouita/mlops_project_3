@@ -75,5 +75,8 @@ def inference(model, X):
     preds : np.array
         Predictions from the model.
     """
+    print("X:", X)
+    print("X shape:", X.shape)
     preds = model.predict(X)
+    print("Preds: ", preds)
     return preds
