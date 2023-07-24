@@ -22,4 +22,4 @@ input_data = {
 response = requests.post("https://mlops-s8p2.onrender.com/run_inference/", data=json.dumps((input_data)))
 
 print("Status code: ", response.status_code)
-print("Salary category: ", response.json())
+# print("Salary category: ", response.json())
