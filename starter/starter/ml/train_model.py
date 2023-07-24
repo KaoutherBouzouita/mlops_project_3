@@ -8,8 +8,8 @@ from sklearn.model_selection import train_test_split
 import pickle
 from sklearn.tree import DecisionTreeClassifier
 
-from data import process_data
-from model import train_model, inference, compute_model_metrics, save_model
+import data
+import model
 
 
 def slice_averages(cat_features, df_train, df_test):
@@ -30,23 +30,23 @@ def slice_averages(cat_features, df_train, df_test):
             df_test_cat["salary"] = y_test_cat
 
             # Proces the test data with the process_data function.
-            X_train_cat_preproc, y_train_cat_preproc, encoder, lb = process_data(
+            X_train_cat_preproc, y_train_cat_preproc, encoder, lb = data.process_data(
                 df_train_cat, categorical_features=cat_features, label="salary", training=True
             )
 
             # Proces the test data with the process_data function.
-            X_test_cat_preproc, y_test_cat_preproc, encoder, lb = process_data(
+            X_test_cat_preproc, y_test_cat_preproc, encoder, lb = data.process_data(
                 df_test_cat, categorical_features=cat_features, label="salary", training=False,
                 encoder=encoder, lb=lb
             )
 
             # Train model
-            model_cat = train_model(X_train_cat_preproc, y_train_cat_preproc)
+            model_cat = model.train_model(X_train_cat_preproc, y_train_cat_preproc)
 
             # Run inference
-            y_pred_cat = inference(model_cat, X_test_cat_preproc)
+            y_pred_cat = model.inference(model_cat, X_test_cat_preproc)
             # Model metrics for each category
-            precision, recall, fbeta = compute_model_metrics(y_test_cat_preproc, y_pred_cat)
+            precision, recall, fbeta = model.compute_model_metrics(y_test_cat_preproc, y_pred_cat)
 
             print(f"Feature: {cat} - Value {value}")
             print(f"Precision: {precision:.4f}")
@@ -70,8 +70,8 @@ def split_data(data: pd.DataFrame, random_state: bool):
 
 
 def go():
-    data = load_data()
-    train, test = split_data(data, True)
+    input_data = load_data()
+    train, test = split_data(input_data, True)
 
     cat_features = [
         "workclass",
@@ -84,7 +84,7 @@ def go():
         "native-country",
     ]
     # Process the train data with the process_data function.
-    X_train, y_train, encoder, lb = process_data(
+    X_train, y_train, encoder, lb = data.process_data(
         train, categorical_features=cat_features, label="salary", training=True
     )
 
@@ -92,25 +92,25 @@ def go():
         pickle.dump(encoder, file)
 
     # Proces the test data with the process_data function.
-    X_test, y_test, encoder, lb = process_data(
+    X_test, y_test, encoder, lb = data.process_data(
         test, categorical_features=cat_features, label="salary", training=False,
         encoder=encoder, lb=lb
     )
 
     # Train a model.
-    model = train_model(X_train, y_train)
+    trained_model = model.train_model(X_train, y_train)
 
     # Save the trained model
-    save_model(model)
+    model.save_model(trained_model)
 
     # Run inference
-    y_pred = inference(model, X_test)
+    y_pred = model.inference(trained_model, X_test)
 
     print(f"Y test: {y_test}")
     print(f"Y pred: {y_pred}")
 
     # Compute model metrics
-    precision, recall, fbeta = compute_model_metrics(y_test, y_pred)
+    precision, recall, fbeta = model.compute_model_metrics(y_test, y_pred)
 
     print("Overall Precision: ", precision)
     print("Overall Recall: ", recall)
