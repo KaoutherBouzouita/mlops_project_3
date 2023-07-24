@@ -25,14 +25,7 @@ jobs:
         python-version: "3.8"
     - name: Install dependencies
       run: |
-        pip install pandas
-        if [ -f ../../requirements.txt ]; then pip install -r ../../requirements.txt; fi
-        pip install scikit-learn
-        pip install flake8 pytest
-        pip install fastapi
-        pip install requests
-        pip install httpx
-        pip install munch
+        pip install numpy pandas scikit-learn flake8 pytest fastapi requests httpx munch uvicorn gunicorn ydata-profiling
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
