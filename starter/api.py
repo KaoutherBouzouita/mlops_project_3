@@ -8,7 +8,7 @@ from munch import DefaultMunch
 from fastapi import FastAPI, Body
 from pydantic import BaseModel, Field
 
-import starter.ml.model as model
+import model as model
 
 
 class Person(BaseModel):
