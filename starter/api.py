@@ -9,6 +9,7 @@ from fastapi import FastAPI, Body
 from pydantic import BaseModel, Field
 
 from starter.starter.ml.model import inference, load_model
+from starter.starter.ml.train_model import save_encoder
 
 
 class Person(BaseModel):
@@ -38,6 +39,7 @@ async def greetings():
 
 @app.post("/run_inference/")
 def run_inference(X_input: Person):
+    save_encoder()
     # Input data (single sample)
     X_init = {
         "age": X_input.age,

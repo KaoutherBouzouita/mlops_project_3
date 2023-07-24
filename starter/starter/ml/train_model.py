@@ -73,6 +73,28 @@ def split_data(data: pd.DataFrame, random_state: bool):
     return train_test_split(data, test_size=0.20)
 
 
+def save_encoder():
+    input_data = load_data()
+    train, test = split_data(input_data, True)
+
+    cat_features = [
+        "workclass",
+        "education",
+        "marital-status",
+        "occupation",
+        "relationship",
+        "race",
+        "sex",
+        "native-country",
+    ]
+    # Process the train data with the process_data function.
+    X_train, y_train, encoder, lb = data.process_data(
+        train, categorical_features=cat_features, label="salary", training=True
+    )
+
+    with open('encoder.pkl', 'wb') as file:
+        pickle.dump(encoder, file)
+
 def go():
     input_data = load_data()
     train, test = split_data(input_data, True)
