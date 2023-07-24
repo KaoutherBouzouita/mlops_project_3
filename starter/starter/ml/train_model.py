@@ -8,8 +8,8 @@ from sklearn.model_selection import train_test_split
 import pickle
 from sklearn.tree import DecisionTreeClassifier
 
-import data
-import model
+import starter.starter.ml.data as data
+import starter.starter.ml.model as model
 
 
 def slice_averages(cat_features, df_train, df_test):
