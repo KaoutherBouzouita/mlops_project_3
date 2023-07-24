@@ -8,9 +8,7 @@ from munch import DefaultMunch
 from fastapi import FastAPI, Body
 from pydantic import BaseModel, Field
 
-import requests
-
-from starter.ml.model import inference, load_model
+from starter.starter.ml.model import load_model, inference
 
 
 class Person(BaseModel):
