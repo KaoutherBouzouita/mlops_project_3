@@ -21,5 +21,5 @@ input_data = {
 response = requests.post("https://mlops-project-3.onrender.com/", data=json.dumps((input_data)))
 
 print("Status code: ", response.status_code)
-print("Salary category: ", response.json())
+print("Salary category: ", str(response.json()))
 
