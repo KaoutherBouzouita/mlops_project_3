@@ -3,6 +3,7 @@ import os
 import pytest
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
 
 import starter.starter.ml.data as data
 import starter.starter.ml.model as model
@@ -100,5 +101,6 @@ def test_train_model(df, X_train, y_train):
     assert df.shape == (32561, 15)
     trained_model = model.train_model(X_train=X_train, y_train=y_train)
     assert len(trained_model.classes_) == 2
+    assert type(trained_model) == DecisionTreeClassifier
 
 

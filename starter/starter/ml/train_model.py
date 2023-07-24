@@ -15,6 +15,9 @@ import starter.starter.ml.model as model
 def slice_averages(cat_features, df_train, df_test):
     """ Function for calculating descriptive stats on slices of the Adult dataset."""
 
+    if os.path.exists("slice_output.txt"):
+        os.remove("slice_output.txt")
+
     for cat in cat_features:  # cat in ['workclass', 'education', 'marital-status', 'occupation',...]
         for value in df_test[cat].unique():
             # X and y datasets for category cat
@@ -48,11 +51,14 @@ def slice_averages(cat_features, df_train, df_test):
             # Model metrics for each category
             precision, recall, fbeta = model.compute_model_metrics(y_test_cat_preproc, y_pred_cat)
 
-            print(f"Feature: {cat} - Value {value}")
-            print(f"Precision: {precision:.4f}")
-            print(f"Recall: {recall:.4f}")
-            print(f"Fbeta: {fbeta:.4f}")
-        print()
+            with open("slice_output.txt", "a") as file:
+                file.write("______________________________________" + "\n")
+                file.write(f"Feature: {cat} - Value {value}" + "\n")
+                file.write("______________________________________" + "\n")
+                file.write(f"Precision: {precision:.4f}" + "\n")
+                file.write(f"Recall: {recall:.4f}" + "\n")
+                file.write(f"Fbeta: {fbeta:.4f}" + "\n")
+                file.write("______________________________________" + "\n")
 
 
 def load_data():
@@ -65,8 +71,6 @@ def split_data(data: pd.DataFrame, random_state: bool):
     if random_state:
         return train_test_split(data, test_size=0.20, random_state=23)
     return train_test_split(data, test_size=0.20)
-
-
 
 
 def go():
@@ -116,7 +120,7 @@ def go():
     print("Overall Recall: ", recall)
     print("Overall Fbeta: ", fbeta)
 
-    # slice_averages(cat_features, train, test)
+    slice_averages(cat_features, train, test)
 
 
 go()

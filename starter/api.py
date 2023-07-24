@@ -8,24 +8,24 @@ from munch import DefaultMunch
 from fastapi import FastAPI, Body
 from pydantic import BaseModel, Field
 
-import starter.starter.ml.model as model
+import starter.ml.model as model
 
 
 class Person(BaseModel):
-    age: int
-    workclass: str
-    fnlgt: int
-    education: str
-    education_num: int
-    marital_status: str
-    occupation: str
-    relationship: str
-    race: str
-    sex: str
-    capital_gain: int
-    capital_loss: int
-    hours_per_week: int
-    native_country: str
+    age: int = Field(examples=[30])
+    workclass: str = Field(examples=["Private"])
+    fnlgt: int = Field(examples=[120000])
+    education: str = Field(examples=["Bachelors"])
+    education_num: int = Field(examples=[13])
+    marital_status: str = Field(examples=["Married-civ-spouse"])
+    occupation: str = Field(examples=["Prof-specialty"])
+    relationship: str = Field(examples=["Husband"])
+    race: str = Field(examples=["White"])
+    sex: str = Field(examples=["Male", "Female"])
+    capital_gain: int = Field(examples=[5000])
+    capital_loss: int = Field(examples=[0])
+    hours_per_week: int = Field(examples=[40])
+    native_country: str = Field(examples=["United States"])
 
 
 app = FastAPI()
