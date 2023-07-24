@@ -8,7 +8,6 @@ from munch import DefaultMunch
 from fastapi import FastAPI, Body
 from pydantic import BaseModel, Field
 
-import model as model
 from starter.starter.ml.model import inference, load_model
 
 
