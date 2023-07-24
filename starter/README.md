@@ -12,6 +12,10 @@ Working in a command line environment is recommended for ease of use with git an
    * As you work on the code, continually commit changes. Trained models you want to keep must be committed to DVC.
 * Connect your local Git repository to GitHub.
 
+# Git Repository
+https://github.com/KaoutherBouzouita/mlops_project_3
+
+
 ## Set up S3
 
 * In your CLI environment install the<a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html" target="_blank"> AWS CLI tool</a>.
