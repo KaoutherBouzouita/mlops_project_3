@@ -8,7 +8,7 @@ from munch import DefaultMunch
 from fastapi import FastAPI, Body
 from pydantic import BaseModel, Field
 
-from starter.ml.model import load_model, inference
+import starter.starter.ml.model as model
 
 
 class Person(BaseModel):
@@ -78,7 +78,7 @@ def run_inference(X_input: Person):
 
     X_data = np.concatenate((X_numerical, X_categorical_encoded), axis=1)
 
-    y = inference(model=load_model("model"), X=X_data)
+    y = model.inference(model=model.load_model("model"), X=X_data)
 
     return {"salary": str(y)}
 
@@ -100,11 +100,5 @@ if __name__ == "__main__":
         "hours_per_week": 40,
         "native_country": "United States"
     }
-
-    # response = requests.post("http://localhost:8000/run_inference/", json.dumps(X))
-
-    # print(response.json())
-
-    # print(response.status_code)
 
     run_inference(X_input=DefaultMunch.fromDict(X))
